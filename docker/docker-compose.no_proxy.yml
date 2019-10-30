@@ -1,0 +1,20 @@
+version: '3'
+services:
+  web:
+    image: $IMAGE_NAME
+    container_name: $CONTAINER_NAME
+    build:
+      context: ..
+      dockerfile: ./docker/DOCKERFILE.ISOPROD_NO_PROXY
+      args:
+        RHEL_PASSWORD: $RHEL_PASSWORD
+        RHEL_USERNAME: $RHEL_USERNAME
+    ports:
+      - $CONTAINER_PORT:80
+    volumes:
+      - ../:/var/www/html
+
+networks:
+  default:
+    external:
+      name: $NETWORK_NAME

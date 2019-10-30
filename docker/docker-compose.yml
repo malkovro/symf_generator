@@ -1,0 +1,25 @@
+version: '3'
+services:
+  web:
+    image: $IMAGE_NAME
+    container_name: $CONTAINER_NAME
+    build:
+      context: ..
+      dockerfile: ./docker/DOCKERFILE.ISOPROD
+      args:
+        RHEL_PASSWORD: $RHEL_PASSWORD
+        RHEL_USERNAME: $RHEL_USERNAME
+        PROXY_PORT: $PROXY_PORT
+        PROXY_HOSTNAME: $PROXY_HOSTNAME
+        PROXY_USER: $PROXY_USER
+        PROXY_PASSWORD: $PROXY_PASSWORD
+        HTTP_PROXY: $HTTP_PROXY
+    ports:
+      - $CONTAINER_PORT:80
+    volumes:
+      - ../:/var/www/html
+
+networks:
+  default:
+    external:
+      name: $NETWORK_NAME

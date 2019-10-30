@@ -1,0 +1,33 @@
+{% if(app.user) %}
+    <nav id="gdcweb_navigation_bar" class="py-1 navbar navbar-expand-lg navbar-light">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarAdminDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Administration
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarAdminDropdown">
+                        <a class="nav-item nav-link" href="/to_replace"><i class="fa mr-2 fa-list-ul"></i>Entité administrable</a>
+                    </div>
+                </li>
+                <li><a class="nav-item nav-link" href="{{ path('home') }}"><i class="fa mr-2 fa-school"></i>Dotations</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li>
+                    <span class="nav-item nav-link">
+                        {{ app.user.firstname }} {{ app.user.lastname | upper }}
+                    </span>
+                </li>
+                <li><a class="nav-item nav-link" href="{{ path('app_logout') }}"><i class="fa fa-sign-out-alt mr-2"></i>Sortir</a></li>
+            </ul>
+        </div>
+    </nav>
+{% endif %}
+
+

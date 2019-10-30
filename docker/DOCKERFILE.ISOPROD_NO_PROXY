@@ -1,0 +1,73 @@
+FROM registry.redhat.io/rhel7/rhel:7.5
+
+ARG RHEL_USERNAME
+ARG RHEL_PASSWORD
+
+# Registering container to RedHat Dev account
+RUN subscription-manager register --username $RHEL_USERNAME --password $RHEL_PASSWORD --auto-attach
+
+# Install PHP 7.1 from remi repo
+RUN yum install -y wget \
+    && wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+    && rpm -ivh epel-release-latest-7.noarch.rpm \
+    && rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-7.rpm\
+    && yum-config-manager --enable remi-php71 \
+    && yum -y install php php-opcache \
+    && yum install -y php-mysql php-xml \
+       php-soap php-xmlrpc php-mbstring php-json php-zip php-gd php-mcrypt php-xdebug \
+    && yum clean all \
+    && rm -rf /var/cache/yum
+
+
+# Install Mysql
+RUN rpm -Uvh http://repo.mysql.com/mysql-community-release-el7-7.noarch.rpm \
+    && yum install -y  --enablerepo mysql57-community mysql-community-server \
+    && yum clean all \
+    && rm -rf /var/cache/yum
+
+# Install git, vim
+RUN yum install -y git vim \
+    && yum clean all \
+    && rm -rf /var/cache/yum
+
+RUN git config --global user.email "leo.figea@keyconsulting.fr" && \
+    git config --global user.name "Léo Figea"
+
+# Installing composer (tweaked copy for curl )
+RUN curl https://getcomposer.org/installer --output composer-setup.php \
+      && php -r "if (hash_file('sha384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+      && chmod +x composer-setup.php \
+      && php composer-setup.php --install-dir=/bin --filename=composer \
+      && php -r "unlink('composer-setup.php');"
+
+# Install yarn
+RUN yum install -y gcc-c++ make \
+    && curl -sL https://rpm.nodesource.com/setup_10.x | bash - \
+    && yum install -y nodejs \
+    && curl -o- -L https://yarnpkg.com/install.sh | bash \
+    && yum clean all \
+    && rm -rf /var/cache/yum
+
+#Installing JAVA 8 required by Jasper
+RUN yum install -y java-1.8.0-openjdk-devel \
+    && yum clean all \
+    && rm -rf /var/cache/yum
+
+RUN yum install -y cronie \
+    && rm -rf /var/cache/yum
+
+ENV APACHE_LOG_DIR=/var/log/httpd
+
+WORKDIR /var/www/html
+
+COPY ./docker/files/000-default.conf /etc/httpd/conf.d/welcome.conf
+
+COPY ./docker/scripts/docker-entrypoint.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN ln -s /usr/local/bin/docker-entrypoint.sh \
+    && sed -i.bak 's/\r$//' /usr/local/bin/docker-entrypoint.sh
+
+# Start the service
+CMD ["-D", "FOREGROUND"]
+ENTRYPOINT ["docker-entrypoint.sh"]

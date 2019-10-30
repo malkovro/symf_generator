@@ -1,0 +1,17 @@
+{% extends 'full_width_layout.html.twig' %}
+
+{%  block gdcweb_content %}
+    <div class="container">
+        {% include 'partials/header.html.twig' %}
+        <div class="gdcweb-content leftBorder d-flex flex-column mb-4">
+            {% include 'partials/navigation.html.twig' %}
+
+            <div class="body">
+                {% block body %}{% endblock %}
+            </div>
+
+            {% include 'partials/footer.html.twig' %}
+        </div>
+    </div>
+
+{% endblock %}
