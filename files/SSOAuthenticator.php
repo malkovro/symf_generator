@@ -4,7 +4,6 @@ namespace App\Security;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,11 +12,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
@@ -26,7 +23,7 @@ class SSOAuthenticator extends AbstractGuardAuthenticator
 {
     use TargetPathTrait;
 
-    const HEADER_CREDENTIAL = 'X-AUTH-TOKEN';
+    const HEADER_CREDENTIAL = 'X-FORWARDED-USER';
 
     private $entityManager;
     private $urlGenerator;
@@ -43,7 +40,7 @@ class SSOAuthenticator extends AbstractGuardAuthenticator
 
     public function supports(Request $request)
     {
-        return $request->headers->has(self::HEADER_CREDENTIAL);
+        return !$request->getUser() && 'auto_login' === $request->attributes->get('_route') && $request->isMethod('GET');
     }
 
     public function getCredentials(Request $request)
@@ -89,21 +86,8 @@ class SSOAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * Returns a response that directs the user to authenticate.
-     *
-     * This is called when an anonymous request accesses a resource that
-     * requires authentication. The job of this method is to return some
-     * response that "helps" the user start into the authentication process.
-     *
-     * Examples:
-     *
-     * - For a form login, you might redirect to the login page
-     *
-     *     return new RedirectResponse('/login');
-     *
-     * - For an API token authentication system, you return a 401 response
-     *
-     *     return new Response('Auth header required', 401);
+     * Returns a response that directs the user to the homepage (dashboard) where he/she will be authenticated checking
+     * the header. This goes in pair with the supports method implemented above.
      *
      * @param Request $request The request that resulted in an AuthenticationException
      * @param AuthenticationException $authException The exception that started the authentication process
@@ -112,9 +96,7 @@ class SSOAuthenticator extends AbstractGuardAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $url = $this->getUnauthorizedUrl();
-
-        return new RedirectResponse($url);
+        return new RedirectResponse('/');
     }
 
     /**

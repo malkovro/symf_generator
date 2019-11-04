@@ -130,6 +130,28 @@ In the access_control section, adjust something like:
         - { path: ^/acces-non-autorise, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
+## Impersonating users
+
+For testing purposes and to offer 'Tech Support', it might be interesting to setup the impersonating feature offered by Symfony to browse the platform as a specific given user with his/her given roles and permissions.
+To set this up, follow the documentation available [here](https://symfony.com/doc/current/security/impersonating_user.html):
+
+- add the following statemenent to the main firewall:
+
+        switch_user: { role: CAN_SWITCH_USER }
+
+* Implement Voter taking [this one](./files/SwitchToUserVoter.php) as example
+
+* Make sure the UserRepository implements UserLoaderInterface and implements loadUserByUsername if the property Username used to display the name of the user is not persisted in DB (it could be for instance a combination of firstname and lastname). The property key then needs to be removed from the User provider in the security.yaml to enforce the UserRepository to be used as query loader.
+
+        public function loadUserByUsername($username)
+        {
+            return$this->createQueryBuilder('u')
+                ->where('CONCAT(u.firstname, \' \', u.lastname) = :username')
+                ->setParameter('username', $username)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+
 ## Need some Tests requiring some interaction with the DB
 
 ### hautelook/AliceBundle
