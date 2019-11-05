@@ -149,7 +149,7 @@ Pour mettre ca en place, il suffit de suivre la doc [ici](https://symfony.com/do
 
         public function loadUserByUsername($username)
         {
-            return$this->createQueryBuilder('u')
+            return $this->createQueryBuilder('u')
                 ->where('CONCAT(u.firstname, \' \', u.lastname) = :username')
                 ->setParameter('username', $username)
                 ->getQuery()
@@ -160,25 +160,25 @@ Pour mettre ca en place, il suffit de suivre la doc [ici](https://symfony.com/do
 
 ### hautelook/AliceBundle
 
-Install the package launching:
+Installer la librairie:
 
     composer require --dev hautelook/alice-bundle
 
-Create your fixture files in the fixtures directory.
+Créer les fixtures dans le dossier du même nom `fixtures`.
 
-Make your test use the trait `Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait` to make them load your fixture in DB before actually launching the test.
+Les tests utilisant les fixtures doivent utiliser le trait `Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait` pour faire charger les éléments en base avant de lancer les tests.
 
-###Test the JS ?
+### Test du JS ?
 
-Use symfony/Panther to do e2e testing, first install it with (require the unzip command):
+La librairie symfony/Panther permet les tests e2e (end to end), elle s'installe avec la commande suivante:
 
-    composer req --dev symfony/panther
+    composer require --dev symfony/panther
 
-Follow then all instructions in the [documentation](https://packagist.org/packages/symfony/panther)
+Suivre ensuite les instructions de la [documentation](https://packagist.org/packages/symfony/panther)
 
-### Need to format model for presentation purpose ?
+### Besoin de formatter des models avant de les renvoyer au front par ex ?
 
-Fratal is a library providing presentation and transformation layer of complex data (our entities).
-Documentation can be found [here](https://fractal.thephpleague.com/). But in the main lines, to install :
+Fratal est une librairie proposant d'implémenter une couche de présentation et de transformation des données complexes (nos entités).
+LA documentation se trouve [ic](https://fractal.thephpleague.com/). Mais dans les grandes lignes :
 
     composer require league/fractal
