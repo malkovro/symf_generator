@@ -77,7 +77,7 @@ Copier également le [dossier des fonts](./files/assets/fonts) vers `{ProjectRoo
 
 Pour s'intégrer avec le reste du parc, les librairies js suivantes peuvent aider:
 
-    npm install --save @fortawesome/fontawesome-free jquery popper.js bootstrap sass-loader@^7.0.1 node-sass
+    npm install --save @fortawesome/fontawesome-free jquery popper.js bootstrap sass-loader@^7.0.1 node-sass bootstrap-datepicker
 
 Ne reste plus qu'à lancer `npm install` pour télécharger toutes les dépendences et `npm run dev/prod` pour compiler notre scss, js and vuejs etc dans le dossier public.
 
