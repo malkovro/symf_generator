@@ -50,6 +50,8 @@ parameters:
 
 ## Mise en place de Encore
 
+Dans le but de garder une cohérence dev/ environnement de production, les commandes suivantes sont à lancer sur le container docker, après avoir lancer `docker exec -it $container bash`.
+
 Ce module doit être installé en utilisant Symfony Flex grâce à la ligne de commande suivante:
 
     composer require symfony/webpack-encore-bundle
