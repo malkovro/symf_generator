@@ -36,7 +36,8 @@ Se diriger vers le fichier config/packages/twig.yaml et ajouter les lignes suiva
 ```
     globals:
         app_details:
-            code: '%app_name%'
+            code   : '%app_name2%'
+            libelle: '%app_name3%'
             version: '%app_version%'
 ```
 
@@ -44,8 +45,10 @@ Il reste donc à configurer les valeurs de ces paramètres dans le fichier `conf
 
 ```
 parameters:
-    app_name: _Name of the app_
-    app_version: _Version of the app_
+    app_name:  numirad
+    app.name2: NUMIRAD
+    app.name3: Gestion des Instruments de Recherche et des Demandes de Numérisation
+    app_version: '0.1'
 ```
 
 ## Mise en place de Encore
