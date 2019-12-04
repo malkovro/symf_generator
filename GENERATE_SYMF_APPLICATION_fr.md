@@ -104,6 +104,7 @@ Se diriger vers `config/packages/security.yaml` et ajouter au firewall main:
     logout:
         path: app_logout
 ```
+
 Il reste à créer l'authentificator mentionné dans le dossier src/Security/ en se basant sur [l'exemple](./files/LoginFormAuthenticator.php).
 
 Ajuster la section `access_control` dans le fichier de sécurité:
@@ -134,6 +135,13 @@ Ajuster la section `access_control` dans le fichier de sécurité:
     access_control:
         - { path: ^/acces-non-autorise, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+
+## Hashage du mot de passe
+
+Dans le cas d'une authentification classique par login/mot de passe, il convient de hasher le mot de passe, lors de la création ou mise à jour du mot de passe d'un utilisateur.
+A cet effet, il faut injecter dans le constructeur du service ou Controleur qui effectue l'action l'interface _Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface_ et venir utiliser sa méthode _encodePassword_ qui prent en argument un utilisateur et le mot de passe à hashé et renvoit le mot de passe hashé qui peut venir être sauvegardé en base de données.
+
+Le service [ResetPasswordService](./files/ResetPasswordService.php) est un exemple permettant la réinitialisation de mot de passe. En pré-requis, l'entité User doit avoir une colonne nullable _reset_token_.
 
 ## Usurpation des utilisateurs
 
