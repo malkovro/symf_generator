@@ -192,3 +192,53 @@ Fratal est une librairie proposant d'implémenter une couche de présentation et
 LA documentation se trouve [ic](https://fractal.thephpleague.com/). Mais dans les grandes lignes :
 
     composer require league/fractal
+
+## Trucs et astuces
+
+### Champs datepicker
+
+Pour afficher les datepicker en mode bootstrap, quelques étapes de configuration sont nécessaires:
+
+- installer la librairie npm `bootstrap-datepicker` (depuis l'intérieur du container docker):
+
+            npm install --save bootstrap-datepicker
+
+- dans la configuration du champ easyadmin ajouter
+
+        type_options: { attr: { class: js-datepicker }}
+
+- dans le javascript _app.js_ et _easyadmin.js_ ajouter
+
+        require("bootstrap-datepicker");
+
+        $(function () {
+            $('.js-datepicker').datepicker({ format: 'yyyy-mm-dd' })
+        });
+
+- dans les fichiers de styles _app.scss_ ajouter:
+
+        @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css";
+
+### Champs select2
+
+Pour afficher les select2, quelques étapes de configuration sont nécessaires:
+
+- installer la librairie npm `select2` (depuis l'intérieur du container docker):
+
+            npm install --save select2
+
+- dans la configuration du champ easyadmin ajouter
+
+        type_options: { attr: { class: select2 }}
+
+- dans le javascript _app.js_ et _easyadmin.js_ ajouter
+
+        require("select2");
+
+        $(function () {
+            $('.select2').select2()
+        });
+
+- dans les fichiers de styles _app.scss_ ajouter:
+
+        @import "~select2";
